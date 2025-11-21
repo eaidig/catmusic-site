@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Site oficial da banda Cat Music. Rock Progressivo e Saúde Mental.">
     <title>Cat Music | Sons para a mente</title>
     
-    <!-- Fonts -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (Via CDN for Single File portability) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -28,26 +29,34 @@
             animation: {
               'spin-slow': 'spin 20s linear infinite',
               'float': 'float 6s ease-in-out infinite',
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'shimmer': 'shimmer 1s infinite',
             },
             keyframes: {
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-20px)' },
+              },
+              shimmer: {
+                '0%': { transform: 'translateX(-100%) skewX(12deg)' },
+                '100%': { transform: 'translateX(100%) skewX(12deg)' },
               }
             }
           }
         }
       }
     </script>
+
+    <!-- Custom CSS -->
     <style>
       body {
         background-color: #0a0510;
         color: white;
         margin: 0;
         overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
       }
-      /* Hide scrollbar for cleaner look */
+      
+      /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -61,18 +70,231 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #555; 
       }
+
+      /* Selection Color */
+      ::selection {
+        background: #FFD700;
+        color: #0a0510;
+      }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
-  }
-}
-</script>
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<body class="bg-deepPurple">
+
+    <!-- 1. Particle Background (Canvas) -->
+    <canvas id="particle-canvas" class="fixed inset-0 z-0 w-full h-full pointer-events-none" style="background: linear-gradient(to bottom, #0a0510, #1a0b2e);"></canvas>
+
+    <!-- 2. Main Content -->
+    <main class="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pb-32 px-4 text-center">
+        
+        <!-- Hero Section (Cat SVG) -->
+        <div class="mb-8 animate-float">
+            <div class="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+                <svg viewBox="0 0 500 500" class="w-full h-full drop-shadow-[0_0_20px_rgba(255,215,0,0.3)]" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- Rotating Pattern -->
+                        <pattern id="sunflowerPattern" x="0" y="0" width="500" height="500" patternUnits="userSpaceOnUse">
+                            <g class="origin-center animate-spin-slow" style="transform-origin: 250px 250px;">
+                                <!-- Sun Core -->
+                                <circle cx="250" cy="250" r="50" fill="#FFD700" />
+                                <!-- Petals Layers -->
+                                <!-- Using JS to generate repetitive SVG elements to keep HTML clean is possible, but hardcoded is safer for single file portability without execution delay -->
+                                <g id="petals-layer-1"></g>
+                                <g id="petals-layer-2"></g>
+                            </g>
+                            <!-- Overlay Gradient -->
+                            <rect width="500" height="500" fill="url(#gradientOverlay)" style="mix-blend-mode: overlay;" />
+                        </pattern>
+
+                        <radialGradient id="gradientOverlay" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                            <stop offset="0%" stop-color="#fff" stop-opacity="0.2" />
+                            <stop offset="100%" stop-color="#000" stop-opacity="0.5" />
+                        </radialGradient>
+
+                        <!-- Cat Mask -->
+                        <mask id="catMask">
+                            <path d="M350 450 H150 C130 450 120 430 125 410 L140 300 C130 250 140 200 180 170 L170 120 L200 135 C220 130 280 130 300 135 L330 120 L320 170 C360 200 370 250 360 300 L375 410 C380 430 370 450 350 450 Z" fill="white" />
+                            <path d="M375 410 Q420 380 420 300 Q420 250 400 250 Q380 250 380 270" fill="none" stroke="white" stroke-width="20" stroke-linecap="round" />
+                        </mask>
+                    </defs>
+
+                    <!-- Render Masked Content -->
+                    <rect x="0" y="0" width="500" height="500" fill="url(#sunflowerPattern)" mask="url(#catMask)" />
+                    
+                    <!-- Outline -->
+                    <path d="M350 450 H150 C130 450 120 430 125 410 L140 300 C130 250 140 200 180 170 L170 120 L200 135 C220 130 280 130 300 135 L330 120 L320 170 C360 200 370 250 360 300 L375 410 C380 430 370 450 350 450 Z" fill="none" stroke="rgba(255,215,0,0.3)" stroke-width="2" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="space-y-4 mb-12">
+            <h1 class="font-cinzel text-5xl md:text-7xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                CAT MUSIC
+            </h1>
+            <p class="font-lato text-lg md:text-2xl text-gray-300 font-light tracking-wider uppercase border-t border-b border-white/10 py-2 inline-block px-6">
+                Sons para a mente. Luz para a alma.
+            </p>
+        </div>
+
+        <!-- About Text -->
+        <div class="max-w-lg mb-12">
+            <p class="font-lato text-gray-400 text-sm md:text-base leading-relaxed">
+                Música autoral focada em saúde mental e rock progressivo. <br/>
+                <span class="text-gold/80">De Esteio para o mundo.</span>
+            </p>
+        </div>
+
+        <!-- Social Links -->
+        <div class="flex gap-8 md:gap-12 items-center justify-center">
+            
+            <!-- YouTube -->
+            <a href="https://youtube.com/@bandacatmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube" 
+               class="group relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300 hover:scale-110 hover:bg-white/10 hover:border-gold/50 hover:shadow-[0_0_20px_rgba(255,215,0,0.2)] overflow-hidden">
+                <div class="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-shimmer"></div>
+                <svg class="relative z-10 text-gray-300 group-hover:text-gold transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+
+            <!-- Instagram -->
+            <a href="https://instagram.com/bandacatmusic" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+               class="group relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300 hover:scale-110 hover:bg-white/10 hover:border-gold/50 hover:shadow-[0_0_20px_rgba(255,215,0,0.2)] overflow-hidden">
+               <div class="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-shimmer"></div>
+                <svg class="relative z-10 text-gray-300 group-hover:text-gold transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+
+            <!-- Spotify Link -->
+            <a href="https://open.spotify.com/intl-pt/artist/5yEMDoYiYpqNanUSgJ8KL4?go=1&sp_cid=e5775686f886fcb8da20d984aeb2620a&utm_source=embed_player_p&utm_medium=desktop&nd=1&dlsi=a726cd2cc073472e" target="_blank" rel="noopener noreferrer" aria-label="Spotify"
+               class="group relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300 hover:scale-110 hover:bg-white/10 hover:border-gold/50 hover:shadow-[0_0_20px_rgba(255,215,0,0.2)] overflow-hidden">
+               <div class="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-shimmer"></div>
+                <svg class="relative z-10 text-gray-300 group-hover:text-gold transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 11.5c4-1.5 8-.5 10 .5"/><path d="M7.5 15c4.5-1.5 9.5-.5 11 1"/><path d="M9 8c3.5-1 7.5 0 10 1.5"/></svg>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- 3. Footer Player (Spotify Embed) -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 p-4 flex justify-center">
+        <div class="w-full max-w-2xl transform transition-all hover:scale-[1.01] duration-500">
+            <div class="relative rounded-[12px] bg-[#0a0510] border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] hover:shadow-[0_0_20px_rgba(147,51,234,0.2)] overflow-hidden">
+                <iframe 
+                    style="border-radius: 12px;" 
+                    src="https://open.spotify.com/embed/artist/5yEMDoYiYpqNanUSgJ8KL4?utm_source=generator&theme=0" 
+                    width="100%" 
+                    height="80" 
+                    frameBorder="0" 
+                    allowfullscreen="" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy"
+                    title="Cat Music Spotify Player"
+                    class="block bg-[#181818]">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. JavaScript Logic -->
+    <script>
+        // --- Populating SVG Petals Dynamically ---
+        // This prevents cluttering HTML with 24 path tags
+        document.addEventListener('DOMContentLoaded', () => {
+            const layer1 = document.getElementById('petals-layer-1');
+            const layer2 = document.getElementById('petals-layer-2');
+            
+            if(layer1 && layer2) {
+                for(let i = 0; i < 12; i++) {
+                    // Layer 1 (Big Petals)
+                    const petal1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    petal1.setAttribute("d", "M250 250 L250 50 L280 150 Z");
+                    petal1.setAttribute("fill", i % 2 === 0 ? "#FFA500" : "#F0E68C");
+                    petal1.setAttribute("transform", `rotate(${i * 30} 250 250)`);
+                    layer1.appendChild(petal1);
+
+                    // Layer 2 (Inner Details)
+                    const petal2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    petal2.setAttribute("d", "M250 250 L250 120 L265 180 Z");
+                    petal2.setAttribute("fill", "#FF8C00");
+                    petal2.setAttribute("opacity", "0.7");
+                    petal2.setAttribute("transform", `rotate(${i * 30 + 15} 250 250)`);
+                    layer2.appendChild(petal2);
+                }
+            }
+
+            // --- Particle System ---
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationFrameId;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            function createParticles() {
+                particles = [];
+                const particleCount = Math.min(window.innerWidth / 5, 100);
+                
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 2 + 0.5,
+                        color: `rgba(255, 215, 0, ${Math.random() * 0.5 + 0.1})`,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        opacity: Math.random(),
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Vignette Effect
+                const gradient = ctx.createRadialGradient(
+                    canvas.width / 2, canvas.height / 2, canvas.width / 4,
+                    canvas.width / 2, canvas.height / 2, canvas.width
+                );
+                gradient.addColorStop(0, 'rgba(10, 5, 16, 0)');
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw Particles
+                particles.forEach((p) => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+
+                    // Update position
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    // Wrap around
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    // Twinkle
+                    if (Math.random() > 0.95) {
+                        p.radius = Math.max(0.5, Math.min(3, p.radius + (Math.random() - 0.5) * 0.2));
+                    }
+                });
+
+                animationFrameId = requestAnimationFrame(draw);
+            }
+
+            // Initialize
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                createParticles();
+            });
+            
+            resizeCanvas();
+            createParticles();
+            draw();
+        });
+    </script>
+</body>
 </html>
